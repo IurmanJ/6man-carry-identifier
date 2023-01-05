@@ -1,0 +1,313 @@
+
+
+
+
+IPv6 Maintenance                                               J. Iurman
+Internet-Draft                                                    ULiege
+Intended status: Standards Track                           6 August 2022
+Expires: 7 February 2023
+
+
+             Carrying a Generic Identifier in IPv6 packets
+                  draft-iurman-6man-generic-id-latest
+
+Abstract
+
+   Some recent use cases seem to have a need for carrying IDs within
+   packets.  Two examples are _I-D.draft-ietf-6man-enhanced-vpn-vtn-id_
+   and _I-D.draft-li-6man-topology-id_. While they might perfectly make
+   sense on their own, each document requires IANA to allocate a new
+   code point for a new option, which could quickly exhaust the
+   allocation space if similar designs are proposed in the future.  As
+   an example, one might need an 8-bit ID, while another one might need
+   a 24-bit, 32-bit, or 64-bit ID.  Or, even worse, one might need a
+   32-bit ID in a specific context, while someone else might also need a
+   32-bit ID in another context.  Therefore, allocating a new code point
+   for each similar option is probably not the way to go.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://IurmanJ.github.io/draft-iurman-6man-generic-id/draft-iurman-
+   6man-generic-id.html.  Status information for this document may be
+   found at https://datatracker.ietf.org/doc/draft-iurman-6man-generic-
+   id/.
+
+   Discussion of this document takes place on the IPv6 Maintenance
+   Working Group mailing list (mailto:ipv6@ietf.org), which is archived
+   at https://mailarchive.ietf.org/arch/browse/ipv6/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/ipv6/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/IurmanJ/draft-iurman-6man-generic-id.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 7 February 2023.
+
+Copyright Notice
+
+   Copyright (c) 2022 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  New IPv6 Destination and Hop-by-Hop Options
+     3.1.  Generic ID Option
+     3.2.  Generic Context-ID Option
+   4.  IANA Considerations
+     4.1.  Context-Type
+   5.  Security Considerations
+   6.  References
+     6.1.  Normative References
+     6.2.  Informative References
+   Acknowledgments
+   Author's Address
+
+1.  Introduction
+
+   Some recent use cases seem to have a need for carrying IDs within
+   packets.  Two examples are [I-D.draft-ietf-6man-enhanced-vpn-vtn-id]
+   and [I-D.draft-li-6man-topology-id].  While they might perfectly make
+   sense on their own, each document requires IANA to allocate a new
+   code point for a new option, which could quickly exhaust the
+   allocation space if similar designs are proposed in the future.  As
+   an example, one might need an 8-bit ID, while another one might need
+   a 24-bit, 32-bit, or 64-bit ID.  Or, even worse, one might need a
+   32-bit ID in a specific context, while someone else might also need a
+   32-bit ID in another context.  Therefore, allocating a new code point
+   for each similar option is probably not the way to go.
+
+   This document proposes a solution to carry IDs generically to avoid
+   the problem mentioned previously.  Two new Hop-by-Hop and Destination
+   options are defined, called "Generic ID Option" and "Generic Context-
+   ID Option".  Both are defined and explained in this document.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  New IPv6 Destination and Hop-by-Hop Options
+
+3.1.  Generic ID Option
+
+   For simple use cases where an ID is carried without extra fields and
+   without any specific context, a new option type "Generic ID" is
+   defined to carry such ID generically in IPv6 packets, as defined
+   below:
+
+        0                   1                   2                   3
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+                                       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                                       |  Option Type  |  Opt Data Len |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                                                               |
+       ~                  Generic ID (variable length)                 ~
+       |                                                               |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                          Figure 1. Generic ID Option
+
+   where:
+
+   *  Option Type: 8-bit option type identifier as defined in Section 4.
+
+   *  Opt Data Len: 8-bit unsigned integer.  Length of the Generic ID
+      field, in octets.
+
+   *  Generic ID: variable length field.
+
+   Note: as an example, both
+   [I-D.draft-ietf-6man-enhanced-vpn-vtn-id-00] and
+   [I-D.draft-li-6man-topology-id] should use this option to carry IDs
+   they define respectively.
+
+3.2.  Generic Context-ID Option
+
+   For other use cases where an ID is carried with extra fields or when
+   a context is required, a new option type "Generic Context-ID" is
+   defined to carry such ID generically in IPv6 packets, as defined
+   below:
+
+        0                   1                   2                   3
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+                                       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                                       |  Option Type  |  Opt Data Len |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |         Context-Type          |           Reserved            |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                                                               |
+       ~                Context Data (variable length)                 ~
+       |                                                               |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                      Figure 2. Generic Context-ID Option
+
+   where:
+
+   *  Option Type: 8-bit option type identifier as defined in Section 4.
+
+   *  Opt Data Len: 8-bit unsigned integer.  Length of this option, in
+      octets, not including the first 2 octets.
+
+   *  Context-Type: 16-bit field as defined in Section 4.1.
+
+   *  Reserved: 16-bit field MUST be set to zero upon transmission and
+      ignored upon reception.
+
+   *  Context Data: variable length field.  Context-Type-specific data.
+
+   Note: as an example, [I-D.draft-ietf-6man-enhanced-vpn-vtn-id] should
+   use this option to carry the 16-bit ID and flags it defines.
+
+4.  IANA Considerations
+
+   This document requests the following IPv6 Option Type assignments
+   from the Destination Options and Hop-by-Hop Options sub-registry of
+   Internet Protocol Version 6 (IPv6) Parameters.
+
+   http://www.iana.org/assignments/ipv6-parameters/
+   ipv6-parameters.xhtml#ipv6-parameters-2
+
+       Binary Value     Description                   Reference
+       act chg rest
+       --------------------------------------------------------------
+       00   0  TBD      Generic ID Option             [This document]
+       00   0  TBD      Generic Context-ID Option     [This document]
+
+   This document also requests IANA to define a registry group named
+   "Generic Context-ID".
+
+   This group includes the following registries:
+
+   *  Context-Type
+
+   The subsequent subsections detail the registries therein contained.
+
+4.1.  Context-Type
+
+   This registry defines 65535 code points for the Context-Type field to
+   identify the type of context.  The following code points are defined
+   in this document:
+
+   *  0: Reserved
+
+   *  1: VTN [I-D.draft-ietf-6man-enhanced-vpn-vtn-id]
+
+   Other code points are available for assignment via the "IETF Review"
+   process, as per [RFC8126].
+
+   New registration requests MUST use the following template:
+
+   *  Name: name of the newly registered Context-Type.
+
+   *  Code point: desired value of the requested code point.
+
+   *  Reference: reference to the document that defines the new Context-
+      Type.
+
+5.  Security Considerations
+
+   As this document describes new options for IPv6, these are similar to
+   the security considerations of [RFC8200] and the weakness documented
+   in [RFC8250].
+
+   This document does not define the data contents of custom Generic
+   Context-ID options.  These custom options will have security
+   considerations corresponding to their defined data contents that need
+   to be described where those formats are defined.
+
+6.  References
+
+6.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+6.2.  Informative References
+
+   [I-D.draft-ietf-6man-enhanced-vpn-vtn-id]
+              Dong, J., Li, Z., Xie, C., Ma, C., and G. Mishra,
+              "Carrying Virtual Transport Network (VTN) Information in
+              IPv6 Extension Header", Work in Progress, Internet-Draft,
+              draft-ietf-6man-enhanced-vpn-vtn-id-01, 11 July 2022,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-6man-
+              enhanced-vpn-vtn-id-01>.
+
+   [I-D.draft-ietf-6man-enhanced-vpn-vtn-id-00]
+              Dong, J., Li, Z., Xie, C., Ma, C., and G. S. Mishra,
+              "Carrying Virtual Transport Network (VTN) Identifier in
+              IPv6 Extension Header", Work in Progress, Internet-Draft,
+              draft-ietf-6man-enhanced-vpn-vtn-id-00, 5 March 2022,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-6man-
+              enhanced-vpn-vtn-id-00>.
+
+   [I-D.draft-li-6man-topology-id]
+              Li, Z., Hu, Z., and J. Dong, "Topology Identifier in IPv6
+              Extension Header", Work in Progress, Internet-Draft,
+              draft-li-6man-topology-id-00, 20 March 2022,
+              <https://datatracker.ietf.org/doc/html/draft-li-6man-
+              topology-id-00>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
+
+   [RFC8200]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
+              (IPv6) Specification", STD 86, RFC 8200,
+              DOI 10.17487/RFC8200, July 2017,
+              <https://www.rfc-editor.org/rfc/rfc8200>.
+
+   [RFC8250]  Elkins, N., Hamilton, R., and M. Ackermann, "IPv6
+              Performance and Diagnostic Metrics (PDM) Destination
+              Option", RFC 8250, DOI 10.17487/RFC8250, September 2017,
+              <https://www.rfc-editor.org/rfc/rfc8250>.
+
+Acknowledgments
+
+Author's Address
+
+   Justin Iurman
+   ULiege
+   Institut Montefiore B28
+   Allée de la Découverte 10
+   4000 Liège
+   Belgium
+   Email: justin.iurman@uliege.be
