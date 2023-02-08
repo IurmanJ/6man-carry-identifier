@@ -1,17 +1,17 @@
-# Generic Identifier in IPv6 Extension Header
+# Carrying an Identifier in IPv6 packets
 
-This is the working area for the individual Internet-Draft, "Generic Identifier in IPv6 Extension Header".
+This is the working area for the individual Internet-Draft, "Carrying an Identifier in IPv6 packets".
 
-* [Editor's Copy](https://IurmanJ.github.io/draft-iurman-6man-generic-id/#go.draft-iurman-6man-generic-id.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-iurman-6man-generic-id)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-iurman-6man-generic-id)
-* [Compare Editor's Copy to Individual Draft](https://IurmanJ.github.io/draft-iurman-6man-generic-id/#go.draft-iurman-6man-generic-id.diff)
+* [Editor's Copy](https://IurmanJ.github.io/draft-iurman-6man-carry-identifier/#go.draft-iurman-6man-carry-identifier.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-iurman-6man-carry-identifier)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-iurman-6man-carry-identifier)
+* [Compare Editor's Copy to Individual Draft](https://IurmanJ.github.io/draft-iurman-6man-carry-identifier/#go.draft-iurman-6man-carry-identifier.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/IurmanJ/draft-iurman-6man-generic-id/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/IurmanJ/draft-iurman-6man-carry-identifier/blob/main/CONTRIBUTING.md).
 
 Contributions can be made by creating pull requests.
 The GitHub interface supports creating pull requests using the Edit (✏) button.
